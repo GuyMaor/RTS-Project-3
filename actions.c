@@ -561,7 +561,8 @@ void PrintStatus(int *f, char *status)
 	InitGraphicBuffer( &LCD_Buffer_Video, LCD_WIDTH,LCD_HEIGHT,ONE_BIT,LCD_Buffer);
 	ClearGraphicBuffer(&LCD_Buffer_Video);
 	DrawLCD(&LCD_Buffer_Video);
-	InitAsciiBuffer(); 
+	InitAsciiBuffer();
+	 
 	//
 	// Tasks start
 	//
