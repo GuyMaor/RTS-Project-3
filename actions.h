@@ -28,7 +28,7 @@
 #define H_Position 25
 #define Cm_Max_Ps 130
 #define Cm_min_Ps 0
-#define IDB_ASCII 0
+
 
 //Initialize ports of robot
 void InitPobProto();

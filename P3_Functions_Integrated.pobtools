@@ -1,7 +1,7 @@
 # pobtools project
 pobtools.version=4
 target.name=./Assignment3.hex
-sources.number=8
+sources.number=9
 sources.0=./P3_Functions_Integrated.c
 sources.1=./detectImage.h
 sources.2=./directions.h
@@ -10,6 +10,7 @@ sources.4=./actions.h
 sources.5=./actions.c
 sources.6=./bitmap.h
 sources.7=./pattern.h
+sources.8=./bitmap_m.h
 bmps.number=6
 bmps.0=./bitmap/biga.bmp
 bmps.1=./bitmap/cross.bmp

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "math.h"
-#include "bitmap.h"
+#include "bitmap_m.h"
 #include "actions.h"
 
 // external functions declarations (for PrintTextOnPobLCD)
@@ -311,7 +311,7 @@ void MoveBot(DIRECTION *cmd)
 		 
 	while( flag == 5)
 	{
-		if (step >= 0 && step < 10)
+		if (step >= 0 && step < 100)
 		{
 			SetPortD(stop);
 			step++;
