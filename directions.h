@@ -4,10 +4,11 @@
 //
 #ifndef _MOVE_DIR_
 #define MOVE_DIR
-
+#define NUM_DIR 7
 typedef enum movdir
 {
 	// options for manipulating robot corresponding to signs
+	//VERY IMPORTANT: Forward is the first direction listed.
 	FORWARD,
 	TURNBACK,
 	LEFT,

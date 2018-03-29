@@ -23,47 +23,30 @@ DIRECTION SignRecognition()
 		
 	GrabRGBFrame();				
 	BinaryRGBFrame(FrameFromCam); 
-	Nb_Identify=IdentifyForm(FrameFromCam,ListOfForm,pattern);
-	
-	//shapeAmmount is an array that keeps track
-	//of how many instances of each shape is seen
-	//in the picture.
-	char shapeAmmount[NUM_DIR];
-	for(i=0;i<NUM_DIR;i++)
-	{
-		shapeAmmount[i]=0;
-	}		
+	Nb_Identify=IdentifyForm(FrameFromCam,ListOfForm,pattern);	
 	for (i=0;i<Nb_Identify;i++)
 	{
-		
 		switch (ListOfForm[i].id)
 		{
 			case IDP_0_CROSS:
-				shapeAmmount[FORWARD]++;
-				break;
-			case IDP_1_BIGA:
-				shapeAmmount[TURNBACK]++;
-				break;
+				PrevDir = FORWARD;
+				return FORWARD;
+			//case IDP_1_BIGA:
+				//PrevDir = TURNBACK;
+				//return TURNBACK;
 			case IDP_2_KING:
-				shapeAmmount[RIGHT]++;
-				break;
+				PrevDir = RIGHT;
+				return RIGHT;
 			case IDP_3_TOWER:
-				shapeAmmount[STOP]++;
-				break;		
+				PrevDir = STOP;
+				return STOP;			
 			case IDP_5_TRIANGLE:
-				shapeAmmount[LEFT]++;
-				break;	
-
+				PrevDir = LEFT;
+				return LEFT;
+			default:
+				return FORWARD;//PrevDir;
 		}				
-	}
-	
-	DIRECTION bestDir = 0;
-	for(i = 1; i < NUM_DIR; i++)
-	{
-		if(shapeAmmount[bestDir]<=shapeAmmount[i])
-			bestDir = i;
-	}
-	return bestDir;
+	}		
 	if (Nb_Identify == 0)
 	{
 		return FORWARD;//PrevDir;	
