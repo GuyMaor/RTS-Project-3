@@ -22,7 +22,7 @@ int main(void)
 
 
 	DetectImageInit();	
-	Initialization();
+	//Initialization();
 	MoveCamera( &cm_ps,&t);	
 
 	while(1)

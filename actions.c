@@ -114,7 +114,7 @@ void MoveCamera(McDir *cm_ps, int *times)
 
 	int step = 0;
 
-	//Initialization();
+	Initialization();
 	
 		
 	flag = 8;
@@ -209,7 +209,7 @@ void MoveBot(DIRECTION *cmd)
 	int flag = -1;
 	char status[15]; 
 
-	//Initialization();
+	Initialization();
 
 	is_valid(cmd,&flag,&status);
 	
