@@ -18,6 +18,27 @@ int main(void)
 	DIRECTION cmd;
 	McDir cm_ps = Horizon;
 	int t = 0;
+
+
+
+	DetectImageInit();	
+	Initialization();
+	MoveCamera( &cm_ps,&t);	
+
+	while(1)
+	{
+
+	cmd = SignRecognition();
+	//cmd = LEFT;
+	
+	MoveBot(&cmd);	
+
+	}
+
+/*
+	DIRECTION cmd;
+	McDir cm_ps = Horizon;
+	int t = 0;
 	int i = 0;
 	
 
@@ -64,7 +85,7 @@ int main(void)
 
 	MoveBot(&cmd);
 
-	
+*/	
 
 		
 	return 0;

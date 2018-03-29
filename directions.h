@@ -4,19 +4,20 @@
 //
 #ifndef _MOVE_DIR_
 #define MOVE_DIR
-#define NUM_DIR 7
+#define NUM_DIR 8
 typedef enum movdir
 {
 	// options for manipulating robot corresponding to signs
 	//VERY IMPORTANT: Forward is the first direction listed.
-	FORWARD,
-	TURNBACK,
-	LEFT,
-	RIGHT,
-	STOP,
+	FORWARD=0,
+	TURNBACK=1,
+	LEFT=2,
+	RIGHT=3,
+	STOP=4,
 	// options for checking surrounding 
-	Isp_Left,
-	Isp_Right	
+	Isp_Left=5,
+	Isp_Right=6,
+	DEFAULT_DIR=7	
 } DIRECTION;
 
 typedef enum MoveCamera

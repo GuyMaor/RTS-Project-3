@@ -57,16 +57,16 @@ DIRECTION SignRecognition()
 		}				
 	}
 	
-	DIRECTION bestDir = 0;
-	for(i = 1; i < NUM_DIR; i++)
+	DIRECTION bestDir = DEFAULT_DIR;
+	for(i = 0; i < NUM_DIR; i++)
 	{
-		if(shapeAmmount[bestDir]<=shapeAmmount[i])
+		if(shapeAmmount[bestDir]<shapeAmmount[i])
 			bestDir = i;
 	}
 	return bestDir;
-	if (Nb_Identify == 0)
-	{
-		return FORWARD;//PrevDir;	
-	}
-	return FORWARD;
+	//if (Nb_Identify == 0)
+	//{
+	//	return FORWARD;//PrevDir;	
+	//}
+	//return FORWARD;
 }
