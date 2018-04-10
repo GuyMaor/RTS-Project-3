@@ -12,11 +12,11 @@ void DetectImageInit()
 //	InitLCD();	
 
 	FrameFromCam = GetRGBFrame();
-/*		
+		
 	InitGraphicBuffer( &ScreenBuffer,LCD_WIDTH,LCD_HEIGHT,ONE_BIT,LCD_Buffer);
 
 	ClearGraphicBuffer(&ScreenBuffer);
-*/
+
 }
 
 DIRECTION SignRecognition()
@@ -53,8 +53,10 @@ DIRECTION SignRecognition()
 				break;		
 			case IDP_5_TRIANGLE:
 				shapeAmmount[LEFT]++;
-				break;	
-
+				break;
+			case IDP_6_CIRCLE:
+				shapeAmmount[CORRECT]++;
+				break;
 		}				
 	}
 	

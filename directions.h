@@ -5,7 +5,7 @@
 #ifndef DIRECTIONS_H
 #define DIRECTIONS_H
 
-#define NUM_DIR 8
+#define NUM_DIR 7
 typedef enum movdir
 {
 	// options for manipulating robot corresponding to signs
@@ -16,9 +16,10 @@ typedef enum movdir
 	RIGHT=3,
 	STOP=4,
 	// options for checking surrounding 
-	Isp_Left=5,
-	Isp_Right=6,
-	DEFAULT_DIR=7	
+//	Isp_Left=5,
+//	Isp_Right=6,
+	CORRECT=5,
+	DEFAULT_DIR=6
 } DIRECTION;
 
 #define NUM_MCDIR_ENUM 2

@@ -275,27 +275,27 @@ void MoveBot(DIRECTION cmd)
 	static UInt8 times_unrec;
 	switch(cmd) {
 	case FORWARD:
-		move_forward();
+	//	move_forward();
 		times_unrec = 0;
 		break;
 	case TURNBACK:
-		move_turnback();
+	//	move_turnback();
 		times_unrec = 0;
 		break;
 	case LEFT:
-		move_left();
+	//	move_left();
 		times_unrec = 0;
 		break;
 	case RIGHT:
-		move_right();
+	//	move_right();
 		times_unrec = 0;
 		break;
 	case STOP:
-		SetPortD(stop);
+	//	SetPortD(stop);
 		times_unrec = 0;
 		break;
-	default:
-		if(times_unrec == 2)
+//	default:
+		/*if(times_unrec == 2)
 			move_right();
 		else if(times_unrec == 5) {
 			move_left();
@@ -304,6 +304,7 @@ void MoveBot(DIRECTION cmd)
 		else if(times_unrec == 9)
 			move_turnback();
 		times_unrec = (times_unrec + 1) % 10;
+		*/
 	}
 
 	WaitMs(1000);
@@ -588,7 +589,7 @@ void is_valid(DIRECTION cmd, int *f, char *status)
 		status[7] = '\0';			
 	}
 
-	else if (cmd == Isp_Left)
+/*	else if (cmd == Isp_Left)
 	{		
 		*f = 6;
 		status[0] = 'o';
@@ -626,7 +627,7 @@ void is_valid(DIRECTION cmd, int *f, char *status)
 		status[12] = 'c';
 		status[13] = 'k';		
 		status[14] = '\0';						
-	}	
+	} */	
 
 	// Error handling for robot manipulation
 	else
