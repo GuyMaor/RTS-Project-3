@@ -10,7 +10,7 @@ UInt8 i;
 UInt8 Nb_Identify;
 UInt8 * FrameFromCam;
 GraphicBuffer ScreenBuffer ;
-DIRECTION PrevDir;
+//DIRECTION PrevDir;
 
 Form ListOfForm[MAX_OF_FORM];
 UInt8 LCD_Buffer [LCD_WIDTH*LCD_HEIGHT*BITS] ;

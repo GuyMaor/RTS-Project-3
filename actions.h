@@ -29,14 +29,15 @@
 #define Cm_Max_Ps 130
 #define Cm_min_Ps 0
 
-
 //Initialize ports of robot
 void InitPobProto();
 //Function for adjusting camera
-void MoveCamera(McDir *cm_ps, int *times);
+void MoveCamera(McDir cm_ps, int times);
 //Function for manipulating robot
-void MoveBot(DIRECTION *cmd);
+void MoveBot(DIRECTION cmd);
 //Function for checking command in robot manipulation
-void is_valid(DIRECTION *cmd, int *f, char *status);
+void is_valid(DIRECTION cmd, int *f, char *status);
+
+void PrintTextOnPobLCD(int row, int col, char *string, UInt8 *Screen_Buffer);
 
 #endif 

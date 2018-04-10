@@ -1,0 +1,23 @@
+# pobtools project
+pobtools.version=4
+target.name=./Project3.hex
+sources.number=8
+sources.0=./actions.c
+sources.1=./actions.h
+sources.2=./detectImage.c
+sources.3=./detectImage.h
+sources.4=./directions.h
+sources.5=./robot_main.c
+sources.6=./scheduler.c
+sources.7=./scheduler.h
+bmps.number=0
+patterns.number=7
+patterns.0=./pattern/0_cross.bmp
+patterns.1=./pattern/1_BigA.bmp
+patterns.2=./pattern/2_king.bmp
+patterns.3=./pattern/3_tower.bmp
+patterns.4=./pattern/4_trefle.bmp
+patterns.5=./pattern/5_triangle.bmp
+patterns.6=./pattern/6_circle.bmp
+sdk=pobeye2
+lang=C

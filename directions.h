@@ -2,8 +2,9 @@
 // Author: Guy Maor in emum movdir of options for manipulating robot corresponding to signs
 // Author: Bang-Li Weng in emum movdir of "options for checking surrounding" and enum MoveCamera
 //
-#ifndef _MOVE_DIR_
-#define MOVE_DIR
+#ifndef DIRECTIONS_H
+#define DIRECTIONS_H
+
 #define NUM_DIR 8
 typedef enum movdir
 {
@@ -20,12 +21,14 @@ typedef enum movdir
 	DEFAULT_DIR=7	
 } DIRECTION;
 
+#define NUM_MCDIR_ENUM 2
+#define UP_ANGLE 9
 typedef enum MoveCamera
 {
 	// options for moving camera
 	Horizon,
 	Up,
-	Down
+	Down	
 } McDir;
 
 #endif

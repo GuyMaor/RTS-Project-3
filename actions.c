@@ -13,6 +13,7 @@ extern void InitAsciiBuffer();
 extern void PrintTextOnPobLCD(int row, int col, char *string, UInt8 *Screen_Buffer);
 extern void HLightText(int row, int col, int size, UInt8 *Screen_Buffer);
 
+void PrintStatus(int*, char*);
 
 // Brief This initialize the PobProto
 void InitPobProto (void)
@@ -21,7 +22,7 @@ void InitPobProto (void)
 	
 	//Proto.porta=ALL_PORTA_AS_ANA;	//to get the position of the analogic joystick, you have to set the PORTA as analogic input
 	Proto.portc=RC7_AS_DO| RC6_AS_DO |RC3_AS_DO |RC2_AS_SERVO|RC1_AS_SERVO |RC0_AS_SERVO;	//all pin of PORTC are configured to manage servomotors
-	Proto.portd=RD7_AS_DI	| RD6_AS_DI	|RD5_AS_DI |RD4_AS_DI|RD3_AS_DO	|RD2_AS_DO	|RD1_AS_DO	|RD0_AS_DO;		//RD0 RD1 RD2 RD3 are configured as digitals 	    output to gear DC motor, RD4 RD5 RD6 RD7 are configured as digitals input
+	Proto.portd=RD7_AS_DI | RD6_AS_DI | RD5_AS_DI | RD4_AS_DI | RD3_AS_DO | RD2_AS_DO | RD1_AS_DO | RD0_AS_DO; //RD0 RD1 RD2 RD3 are configured as digitals output to gear DC motor, RD4 RD5 RD6 RD7 are configured as digitals input
 	SetPobProto(&Proto);	//set the pob proto
 }
 
@@ -94,9 +95,10 @@ void Initialization(void)
 	SwitchOnAllServo();
 
 	//This buffers will stock the pixels to display, 
-	GraphicBuffer		LCD_Buffer_Video;
+/*	GraphicBuffer		LCD_Buffer_Video;
 	UInt8				LCD_Buffer[LCD_WIDTH*LCD_HEIGHT*BITS];
 	UInt8				ASCII_Buffer[LCD_WIDTH*LCD_HEIGHT*BITS];  // Buffer to stock the ascii table in bitmap format	
+	*/
 }
 //
 //Function for adjusting camera
@@ -106,7 +108,7 @@ void Initialization(void)
 //times : factor for moving camera to desired position
 //        e.g. distance of 25 from default level, Horizon = 25
 //		       25 = CM_INCREMENT, 5 * times, 5
-void MoveCamera(McDir *cm_ps, int *times)
+void MoveCamera(McDir cm_ps, int times)
 {
 	int position = H_Position;
 	int flag = -1;
@@ -114,9 +116,6 @@ void MoveCamera(McDir *cm_ps, int *times)
 
 	int step = 0;
 
-	Initialization();
-	
-		
 	flag = 8;
 	PrintToABuffer(print_ps, "%d", position);
 	PrintStatus(&flag, print_ps);
@@ -126,16 +125,16 @@ void MoveCamera(McDir *cm_ps, int *times)
 		SetServoMotor(0, position);
 		step++;
 	}
-	if (*cm_ps == Horizon)
+	if (cm_ps == Horizon)
 	{
 		
 		flag = 9;
 		PrintToABuffer(print_ps, "%d", position);
 		PrintStatus(&flag, print_ps);
 	}
-	else if (*cm_ps == Up)
+	else if (cm_ps == Up)
 	{		
-		position = position + CM_INCREMENT*(*times);
+		position = position + CM_INCREMENT*(times);
 		
 		if (position < Cm_Max_Ps)
 		{			
@@ -164,9 +163,9 @@ void MoveCamera(McDir *cm_ps, int *times)
 		}
 
 	}
-	else if (*cm_ps == Down)
+	else if (cm_ps == Down)
 	{
-		position = position - CM_INCREMENT*(*times);
+		position = position - CM_INCREMENT*(times);
 
 		if (position > Cm_min_Ps)
 		{			
@@ -196,27 +195,119 @@ void MoveCamera(McDir *cm_ps, int *times)
 
 
 }
+
+static void move_forward(void) {
+	UInt8 step;
+	for(step = 0; step < 100; step++)
+		SetPortD(run);	
+
+	SetPortD(stop);
+}
+
+static void move_turnback(void) {
+	UInt8 step;
+	for(step = 0; step < 100; step++)
+		SetPortD(back);
+
+	for(; step < 242; step++)
+		SetPortD(right);
+
+	SetPortD(stop);
+}
+
+static void move_left(void) {
+	UInt8 step;
+	for(step = 0; step < 21; step++)
+		SetPortD(back);
+
+	for(; step < 102; step++)
+		SetPortD(left);
+
+	SetPortD(stop);
+}
+
+static void move_right(void) {
+	UInt8 step;
+	for(step = 0; step < 21; step++)
+		SetPortD(back);
+
+	for(; step < 102; step++)
+		SetPortD(right);
+
+	SetPortD(stop);
+}
+
+static void move_inspect(void) {
+	static UInt8 direction = right;
+	
+	UInt8 step;
+	for(step = 0; step < 51; step++)
+		SetPortD(direction);
+
+	SetPortD(stop);
+
+	direction = direction == right ? left : right;
+	
+	for(step = 204; step < 255; step++)
+		SetPortD(direction);
+
+	SetPortD(stop);
+}
+
 //
 //Function for manipulating robot
 //
 //Parameter:
 //cmd: command of robot manipulation
-void MoveBot(DIRECTION *cmd)
+void MoveBot(DIRECTION cmd)
 {
 	
-	int step = 0;
+//	int step = 0;
 	//int Way = 0;
-	int flag = -1;
-	char status[15]; 
+//	int flag = -1;
+//	char status[15]; 
 
-	Initialization();
-
-	is_valid(cmd,&flag,&status);
+//	is_valid(cmd,&flag,status);
 	
-	PrintStatus(&flag,&status);
+//	PrintStatus(&flag,status);
 
 	// Forward
-	
+	static UInt8 times_unrec;
+	switch(cmd) {
+	case FORWARD:
+		move_forward();
+		times_unrec = 0;
+		break;
+	case TURNBACK:
+		move_turnback();
+		times_unrec = 0;
+		break;
+	case LEFT:
+		move_left();
+		times_unrec = 0;
+		break;
+	case RIGHT:
+		move_right();
+		times_unrec = 0;
+		break;
+	case STOP:
+		SetPortD(stop);
+		times_unrec = 0;
+		break;
+	default:
+		if(times_unrec == 2)
+			move_right();
+		else if(times_unrec == 5) {
+			move_left();
+			move_left();
+		}
+		else if(times_unrec == 9)
+			move_turnback();
+		times_unrec = (times_unrec + 1) % 10;
+	}
+
+	WaitMs(1000);
+/*	
 	while( flag == 1)
 	{
 		if (step >= 0 && step < 100)
@@ -234,7 +325,7 @@ void MoveBot(DIRECTION *cmd)
 	}
 
 	// Turnback
-	
+
 	while( flag == 2)
 	{
 		if (step >= 0 && step < 100)
@@ -322,81 +413,88 @@ void MoveBot(DIRECTION *cmd)
 			flag = 5; 
 	}
 
+	UInt8 inspect_dir_right = 1;
 	// Inspect Left 
 		 
-	while( flag == 6)
+	if( cmd == DEFAULT_DIR && !inspect_dir_right)
 	{
-		if (step >= 0 && step < 51)
-		{
-			SetPortD(left);
-			step++;
+		while(flag) {
+			if (step >= 0 && step < 51)
+			{
+				SetPortD(left);
+				step++;
+			}
+			else if (step >= 51 && step < 102)
+			{
+				SetPortD(stop);
+				SetServoMotor(0, Cm_Max_Ps);			
+				step++; 
+			}
+			else if (step >= 102 && step < 153)
+			{			
+				SetServoMotor(0, Cm_min_Ps);
+				step++; 
+			}
+			else if (step >= 153 && step < 204)
+			{
+				SetServoMotor(0, H_Position);
+				step++; 
+			}
+			else if (step >= 204 && step < 255 )
+			{
+				SetPortD(right);
+				step++;
+			}
+			else
+			{
+				SetPortD(stop);
+				flag=0;
+			}
 		}
-		else if (step >= 51 && step < 102)
-		{
-			SetPortD(stop);
-			SetServoMotor(0, Cm_Max_Ps);			
-			step++; 
-		}
-		else if (step >= 102 && step < 153)
-		{			
-			SetServoMotor(0, Cm_min_Ps);
-			step++; 
-		}
-		else if (step >= 153 && step < 204)
-		{
-			SetServoMotor(0, H_Position);
-			step++; 
-		}
-		else if (step >= 204 && step < 255 )
-		{
-			SetPortD(right);
-			step++;
-		}
-		else
-		{
-			SetPortD(stop);
-			flag=0;
-		}
+		inspect_dir_right = 1;
 	}
 
 	// Inspect Right 
 		 
-	while( flag == 7)
+	if( cmd == DEFAULT_DIR && inspect_dir_right)
 	{
-		if (step >= 0 && step < 51)
-		{
-			SetPortD(right);
-			step++;
+		while(flag) {
+			if (step >= 0 && step < 51)
+			{
+				SetPortD(right);
+				step++;
+			}
+			else if (step >= 51 && step < 102)
+			{
+				SetPortD(stop);
+				SetServoMotor(0, Cm_Max_Ps);			
+				step++; 
+			}
+			else if (step >= 102 && step < 153)
+			{			
+				SetServoMotor(0, Cm_min_Ps);
+				step++; 
+			}
+			else if (step >= 153 && step < 204)
+			{
+				SetServoMotor(0, H_Position);
+				step++; 
+			}
+			else if (step >= 204 && step < 255 )
+			{
+				SetPortD(left);
+				step++;
+			}
+			else
+			{
+				SetPortD(stop);
+				flag=0;
+			}
 		}
-		else if (step >= 51 && step < 102)
-		{
-			SetPortD(stop);
-			SetServoMotor(0, Cm_Max_Ps);			
-			step++; 
-		}
-		else if (step >= 102 && step < 153)
-		{			
-			SetServoMotor(0, Cm_min_Ps);
-			step++; 
-		}
-		else if (step >= 153 && step < 204)
-		{
-			SetServoMotor(0, H_Position);
-			step++; 
-		}
-		else if (step >= 204 && step < 255 )
-		{
-			SetPortD(left);
-			step++;
-		}
-		else
-		{
-			SetPortD(stop);
-			flag=0;
-		}
+		inspect_dir_right = 0;
 	}
-			
-	PrintStatus(&flag,&status);
+*/			
+//	PrintStatus(&flag,status);
 	
 
 }
@@ -407,11 +505,11 @@ void MoveBot(DIRECTION *cmd)
 //cmd: command of robot manipulation
 //f: flag for representing each command
 //status: char array for stating each command process 
-void is_valid(DIRECTION *cmd, int *f, char *status)
+void is_valid(DIRECTION cmd, int *f, char *status)
 {
 
 	
-	if (*cmd == FORWARD)
+	if (cmd == FORWARD)
 	{		
 		*f = 1;
 		status[0] = 'o';
@@ -426,7 +524,7 @@ void is_valid(DIRECTION *cmd, int *f, char *status)
 		status[9] = 'd';
 		status[10] = '\0';
 	}
-	else if (*cmd == TURNBACK)
+	else if (cmd == TURNBACK)
 	{		
 		*f = 2;
 		status[0] = 'o';
@@ -442,7 +540,7 @@ void is_valid(DIRECTION *cmd, int *f, char *status)
 		status[10] = 'k';		
 		status[11] = '\0';
 	}
-	else if (*cmd == LEFT)
+	else if (cmd == LEFT)
 	{		
 		*f = 3;
 		status[0] = 'o';
@@ -459,7 +557,7 @@ void is_valid(DIRECTION *cmd, int *f, char *status)
 		status[11] = 'n';
 		status[12] = '\0';			
 	}
-	else if (*cmd == RIGHT)
+	else if (cmd == RIGHT)
 	{		
 		*f = 4;
 		status[0] = 'o';
@@ -477,7 +575,7 @@ void is_valid(DIRECTION *cmd, int *f, char *status)
 		status[12] = 'n';
 		status[13] = '\0';			
 	}
-	else if (*cmd == STOP)
+	else if (cmd == STOP)
 	{		
 		*f = 5;
 		status[0] = 'o';
@@ -490,7 +588,7 @@ void is_valid(DIRECTION *cmd, int *f, char *status)
 		status[7] = '\0';			
 	}
 
-	else if (*cmd == Isp_Left)
+	else if (cmd == Isp_Left)
 	{		
 		*f = 6;
 		status[0] = 'o';
@@ -510,7 +608,7 @@ void is_valid(DIRECTION *cmd, int *f, char *status)
 	}	
 
 
-	else if (*cmd == Isp_Right)
+	else if (cmd == Isp_Right)
 	{		
 		*f = 7;
 		status[0] = 'o';
@@ -559,11 +657,11 @@ void is_valid(DIRECTION *cmd, int *f, char *status)
 void PrintStatus(int *f, char *status)
 {
 	
-	InitGraphicBuffer( &LCD_Buffer_Video, LCD_WIDTH,LCD_HEIGHT,ONE_BIT,LCD_Buffer);
+/*	InitGraphicBuffer( &LCD_Buffer_Video, LCD_WIDTH,LCD_HEIGHT,ONE_BIT,LCD_Buffer);
 	ClearGraphicBuffer(&LCD_Buffer_Video);
 	DrawLCD(&LCD_Buffer_Video);
 	InitAsciiBuffer();
-	 
+*/	 
 	//
 	// Tasks start
 	//

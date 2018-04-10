@@ -5,17 +5,18 @@
 
 void DetectImageInit()
 {
-	PrevDir = FORWARD;
-	InitPobeye2();
+//	PrevDir = FORWARD;
+//	InitPobeye2();
 	InitI2C(I2C_100_KHZ);
 	InitCameraPobeye2();
-	InitLCD();	
+//	InitLCD();	
 
 	FrameFromCam = GetRGBFrame();
-		
+/*		
 	InitGraphicBuffer( &ScreenBuffer,LCD_WIDTH,LCD_HEIGHT,ONE_BIT,LCD_Buffer);
 
 	ClearGraphicBuffer(&ScreenBuffer);
+*/
 }
 
 DIRECTION SignRecognition()
