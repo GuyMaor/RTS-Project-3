@@ -129,7 +129,7 @@ static void Scheduler(void) {
 
 void SchedulerInit(void) {
 	SendString("Initializing scheduler\n");
-MoveCamera(Up, UP_ANGLE + 1);
+MoveCamera(Up, UP_ANGLE - 1);
 	InitTimer0(MILS_TO_MICROS(FRAME_SIZE));
 	StartClock();
 	Timer0AttachFunction(Scheduler);

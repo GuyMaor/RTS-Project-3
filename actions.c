@@ -198,34 +198,35 @@ void MoveCamera(McDir cm_ps, int times)
 
 static void move_forward(void) {
 	UInt8 step;
-	for(step = 0; step < 100; step++)
+	for(step = 0; step < 75; step++)
 		SetPortD(run);	
 
 	SetPortD(stop);
 }
 
+#define NINETY_DEG 80
 static void move_turnback(void) {
-	UInt8 step;
-	for(step = 0; step < 100; step++)
+	UInt8 step = 0;
+/*	for(step = 0; step < 100; step++)
 		SetPortD(back);
-
-	for(; step < 242; step++)
+*/
+	for(; step < 2 * NINETY_DEG; step++)
 		SetPortD(right);
 
 	SetPortD(stop);
 }
 
-static void move_left(void) {
-	UInt8 step;
-	for(step = 0; step < 21; step++)
+static void turn(UInt8 direction) {
+	UInt8 step = 0;
+/*	for(step = 0; step < 11; step++)
 		SetPortD(back);
-
-	for(; step < 102; step++)
-		SetPortD(left);
+*/
+	for(; step < NINETY_DEG; step++)
+		SetPortD(direction);
 
 	SetPortD(stop);
 }
-
+/*
 static void move_right(void) {
 	UInt8 step;
 	for(step = 0; step < 21; step++)
@@ -235,6 +236,20 @@ static void move_right(void) {
 		SetPortD(right);
 
 	SetPortD(stop);
+}
+*/
+
+static void correct(UInt8 consecutive_correction) {
+	static UInt8 next_dir = right;
+	
+	UInt8 next_step_size = 15 + consecutive_correction * 10;
+	
+	UInt8 step;
+	for(step = 0; step < next_step_size; step++)
+		SetPortD(next_dir);
+
+	SetPortD(stop);
+	next_dir = next_dir == right ? left : right;
 }
 
 static void move_inspect(void) {
@@ -272,39 +287,47 @@ void MoveBot(DIRECTION cmd)
 //	PrintStatus(&flag,status);
 
 	// Forward
+	static UInt8 consecutive_correction;
 	static UInt8 times_unrec;
 	switch(cmd) {
 	case FORWARD:
-	//	move_forward();
+		move_forward();
+		consecutive_correction = 0;
 		times_unrec = 0;
 		break;
 	case TURNBACK:
-	//	move_turnback();
+//		move_turnback();
+		consecutive_correction = 0;
 		times_unrec = 0;
 		break;
 	case LEFT:
-	//	move_left();
+		turn(left);
+		consecutive_correction = 0;
 		times_unrec = 0;
 		break;
 	case RIGHT:
-	//	move_right();
+		turn(right);
+		consecutive_correction = 0;
+		times_unrec = 0;
+		break;
+	case CORRECT:
+		correct(consecutive_correction);
+		consecutive_correction++;
 		times_unrec = 0;
 		break;
 	case STOP:
-	//	SetPortD(stop);
+		SetPortD(stop);
+		consecutive_correction = 0;
 		times_unrec = 0;
 		break;
-//	default:
-		/*if(times_unrec == 2)
-			move_right();
-		else if(times_unrec == 5) {
-			move_left();
-			move_left();
+	default:
+		switch(times_unrec) {
+		case 2: case 5: case 8: case 9:
+			turn(right);
+			break;
 		}
-		else if(times_unrec == 9)
-			move_turnback();
+		consecutive_correction = 0;
 		times_unrec = (times_unrec + 1) % 10;
-		*/
 	}
 
 	WaitMs(1000);
